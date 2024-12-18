@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Models.Feedback>
+@{
+    int rowPerPage = 5;
+    int pages = 1;
+    if (Model.Count() > rowPerPage)
+    {
+        pages = (int)Math.Ceiling((double)Model.Count() / rowPerPage);
+    }
+}
+
+@if(Model.Count() == 0)
+{
+    <h1>No content</h1>
+}
+else
+{@for (int i = 0; i < Model.Count(); i += rowPerPage)
+    {
+        <div class="page">
+            @{
+                var subsetList = Model.Skip(i).Take(rowPerPage);
+            }
+            @foreach (var item in subsetList)
+            {
+                <div>
+                    <table>
+                        <tr>
+                            @if (item.Rate == 1) { <td class="username_row"><span>@item.Username</span> <span>★</span></td> }
+                            @if (item.Rate == 2) { <td class="username_row"><span>@item.Username</span> <span>★★</span></td> }
+                            @if (item.Rate == 3) { <td class="username_row"><span>@item.Username</span> <span>★★★</span></td> }
+                            @if (item.Rate == 4) { <td class="username_row"><span>@item.Username</span> <span>★★★★</span></td> }
+                            @if (item.Rate == 5) { <td class="username_row"><span>@item.Username</span> <span>★★★★★</span></td> }
+                        </tr>
+                        <tr>
+                            <td class="content_row">@item.Feedback1</td>
+                        </tr>
+                        <tr>
+                            <td class="time_row">@item.Date</td>
+                        </tr>
+                    </table>
+                </div>
+            }
+        </div>
+    }
+    <div class="gabi_pagination">
+        <button class="arrow" id="prevPage" disabled>← <span class="nav-text">PREV</span></button>
+        <div class="pages">
+            @for (int i = 1; i <= pages; i++)
+            {
+                if (i == 1)
+                {
+                    <div class="page-number active">@i</div>
+                }
+                else
+                {
+                    <div class="page-number">@i</div>
+                }
+            }
+        </div>
+        <button class="arrow" id="nextPage"><span class="nav-text">NEXT</span> →</button>
+    </div>
+}
+
+<link href="~/css/pagination.css" rel="stylesheet" />
+<script src="~/js/pagination.js"></script>

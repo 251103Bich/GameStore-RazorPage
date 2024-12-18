@@ -1,0 +1,41 @@
+﻿@model Models.Feedback
+@{
+}
+<style>
+    
+</style>
+<label for="comment">Review:</label>
+<form id="myform" method="post" asp-page-handler="SubmitReview" onsubmit="return validateForm()">
+    <input type="hidden" asp-for="Gid" value="@Model.Gid" />
+    <div id="myrate">
+        <span>Please select number of stars</span>
+    </div>
+    <div class="rate">
+        <input type="radio" id="star5" name="rate" value="5" asp-for="Rate" required />
+        <label for="star5" title="5 stars">5 stars</label>
+
+        <input type="radio" id="star4" name="rate" value="4" asp-for="Rate" required />
+        <label for="star4" title="4 stars">4 stars</label>
+
+        <input type="radio" id="star3" name="rate" value="3" asp-for="Rate" required />
+        <label for="star3" title="3 stars">3 stars</label>
+
+        <input type="radio" id="star2" name="rate" value="2" asp-for="Rate" required />
+        <label for="star2" title="2 stars">2 stars</label>
+
+        <input type="radio" id="star1" name="rate" value="1" asp-for="Rate" required />
+        <label for="star1" title="1 star">1 star</label>
+    </div>
+    <div class="clear"></div>
+    <div id="mycomment">
+        <span>Please write your comment.</span>
+    </div>
+    <div class="wrapper">
+        <textarea id="comment" asp-for="Feedback1" placeholder="Write your comment here...." required></textarea>
+    </div>
+    <div class="submit_btn">
+        <button type="submit">Submit</button>
+    </div>
+</form>
+<link href="~/css/review.css" rel="stylesheet" />
+<script src="~/js/review.js"></script>

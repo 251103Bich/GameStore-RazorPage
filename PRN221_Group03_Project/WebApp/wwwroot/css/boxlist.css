@@ -1,0 +1,102 @@
+﻿body form{
+    padding: 8vmin 0;
+}
+
+.boxtitle {
+    padding: 10px 0;
+    font-weight: bold;
+    font-size: 5vmin;
+    text-transform: uppercase;
+}
+
+.divbox {
+    display: flex;
+    border: 1px solid #808080;
+    border-radius: 10px;
+    padding: 20px;
+    width: auto;
+    max-width: 150vmin;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    box-shadow: 0px 0px 30px 1px #808080;
+}
+
+.boximage-wrapper {
+    width: 20vw;
+    aspect-ratio: 16 / 9;
+    border: 2px solid black;
+    overflow: hidden;
+}
+
+    .boximage-wrapper img {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.boxcontent {
+    flex: 3;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.itemname {
+    font-size: 4vmin;
+    font-weight: bold;
+}
+
+.itemdetail {
+    color: white;
+    font-size: 2.5vmin;
+    margin: auto 0;
+    display: flex;
+    gap: 5px;
+}
+    .itemdetail span {
+        padding: 0 5px;
+        border: 2px solid white;
+        background-color: white;
+        color: black;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 2.2vmin;
+    }
+
+        .itemdetail span:hover {
+            background-color: #ff6a00;
+            border: 2px solid #ff6a00;
+            color: white;
+            box-shadow: 0 0 10px 2px grey;
+        }
+
+.boxbuttons {
+    display: flex;
+    gap: 10px;
+    justify-content: right;
+}
+
+    .boxbuttons button,.btn {
+        padding: 10px 20px;
+        border-radius: 30px;
+        height: 80%;
+        font-size: 2vmin;
+        font-weight: bold;
+        cursor: pointer;
+        margin: auto 0;
+    }
+
+        .boxbuttons button,.btn:hover {
+            background-color: #ff6a00;
+            color: white;
+            box-shadow: 0 0 10px 2px grey;
+        }
+
+    .boxbuttons div {
+        padding: 10px 20px;
+        font-size: 4vmin;
+        cursor: pointer;
+    }

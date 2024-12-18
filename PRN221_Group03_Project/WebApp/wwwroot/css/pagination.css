@@ -1,0 +1,126 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+.page {
+    width: 70vmin;
+    padding: 0;
+}
+
+    .page div {
+        list-style: none;
+        margin: 10px auto;
+        padding: 12px;
+        background: white;
+        border-radius: 2px;
+        text-align: center;
+        color: black;
+    }
+
+.username_row {
+    width: 70vmin;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+    .username_row span {
+        padding-right: 20px;
+    }
+
+.content_row {
+    width: 70vmin;
+    text-align: center;
+    padding-top: 10px;
+    padding-right: 20px;
+}
+
+.time_row {
+    width: 70vmin;
+    text-align: right;
+    padding-right: 20px;
+    font-size: 1.5vmin;
+    font-style: italic;
+}
+
+.gabi_pagination {
+    width: 70vmin;
+    text-align: center;
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pages {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    max-width: 100%;
+    width: auto;
+}
+
+.page-number {
+    cursor: pointer;
+    background-color: white;
+    color: #999;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .4s ease;
+}
+
+.active {
+    font-size: 1.3em;
+    height: 40px;
+    width: 40px;
+    background-color: #0057b3;
+    color: white;
+}
+
+button {
+    width: 120px;
+    padding: 8px 16px;
+    background-color: #ffffff00;
+    color: #0057b3;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    button:hover {
+        color: #0056b3;
+    }
+
+    button:disabled {
+        background-color: #ffffff00;
+        color: grey;
+        cursor: not-allowed;
+    }
+
+#prevPage {
+    margin-right: 20px;
+}
+
+#nextPage {
+    margin-left: 20px;
+}
+
+.arrow {
+    font-size: 1.2em;
+    color: white;
+}
+
+.nav-text {
+    font-size: 0.7em;
+    letter-spacing: 0.3em;
+}

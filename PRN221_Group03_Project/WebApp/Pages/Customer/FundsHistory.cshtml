@@ -1,0 +1,28 @@
+﻿@page
+@model WebApp.Pages.Customer.FundsHistoryModel
+@{
+}
+<body style="background-color: black;">
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    <table class="table table-bordered table-hover table-white">
+        <tr>
+            <th>MID</th>
+            <th>Date</th>
+            <th>Money</th>
+            <th>Status</th>
+        </tr>
+        @foreach (var item in Model.moneyHistories)
+        {
+            <tr>
+                <td>@item.Mid</td>
+                <td>@item.Date</td>
+                <td>@item.Money</td>
+                <td>@item.Status</td>
+            </tr>
+        }
+    </table>
+</body>

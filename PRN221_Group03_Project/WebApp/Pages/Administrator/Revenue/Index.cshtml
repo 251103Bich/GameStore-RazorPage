@@ -1,0 +1,252 @@
+﻿@page
+@model WebApp.Pages.Administrator.Revenue.IndexModel
+@{
+}
+
+@{
+    ViewData["Title"] = "revenue";
+
+    var dateNames = (List<DateOnly>)ViewData["DateNames"];
+    var dailyRevenue = (List<long>)ViewData["DateRevenue"];
+
+
+
+
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <canvas id="myChart"></canvas>
+    <br>
+    <h4 style="color: red;" id="dateErrorMess"></h4>
+    <div class="row">
+        <div class="col-md-3">
+            <input type="date" id="startDate" class="form-control" placeholder="Start Date">
+        </div>
+        <div class="col-md-3">
+            <input type="date" id="endDate" class="form-control" placeholder="End Date">
+        </div>
+        <div class="col-md-2">
+            <button id="updateChart" class="btn btn-primary" onclick="updateChart()">Update Chart</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Chuyển đổi dữ liệu từ Razor sang JavaScript
+    var dateNames = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(dateNames));
+    var dailyRevenue = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(dailyRevenue));
+
+    // Thiết lập dữ liệu cho biểu đồ
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar', // Mặc định là biểu đồ cột
+        data: {
+            labels: dateNames.map(date => date.toString()), // Chuyển đổi DateOnly thành chuỗi
+            datasets: [{
+                type: 'line', // Biểu đồ đường
+                label: 'Doanh thu hàng ngày (Đường)',
+                data: dailyRevenue,
+                backgroundColor: 'rgba(155,197,215,0.5)',
+                borderColor: 'rgba(155,197,215,1)',
+                borderWidth: 2,
+                fill: false // Không làm đầy cho biểu đồ đường
+            }, {
+                type: 'bar', // Biểu đồ cột
+                label: 'Doanh thu hàng ngày (Cột)',
+                data: dailyRevenue,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    function updateChart() {
+        var startDate = new Date(document.getElementById("startDate").value);
+        var endDate = new Date(document.getElementById("endDate").value);
+
+        // Kiểm tra xem ngày bắt đầu và ngày kết thúc có hợp lệ không
+        if (isNaN(startDate) || isNaN(endDate) || startDate > endDate) {
+            document.getElementById("dateErrorMess").innerText = "Vui lòng chọn ngày hợp lệ!";
+            return;
+        }
+
+        // Lọc dữ liệu theo khoảng thời gian đã chọn
+        var filteredDates = [];
+        var filteredRevenues = [];
+
+        for (var i = 0; i < dateNames.length; i++) {
+            var currentDate = new Date(dateNames[i]);
+
+            if (currentDate >= startDate && currentDate <= endDate) {
+                filteredDates.push(dateNames[i].toString());
+                filteredRevenues.push(dailyRevenue[i]);
+            }
+        }
+
+        // Cập nhật dữ liệu biểu đồ
+        myChart.data.labels = filteredDates;
+        myChart.data.datasets[0].data = filteredRevenues; // Dữ liệu cho biểu đồ đường
+        myChart.data.datasets[1].data = filteredRevenues; // Dữ liệu cho biểu đồ cột
+
+        // Cập nhật lại biểu đồ
+        myChart.update();
+
+        // Nếu không có dữ liệu nào, hiển thị thông báo
+        if (filteredDates.length === 0) {
+            document.getElementById("dateErrorMess").innerText = "Không có dữ liệu cho khoảng thời gian này!";
+        } else {
+            document.getElementById("dateErrorMess").innerText = "";
+        }
+    }
+</script>
+
+<div style="display: flex; margin: 0 0 0 8%;">
+    <ul class="pagination isotope-options">
+        <li data-filter="detail-revenue" id="myButton">
+            <span>Detail Revenue</span>
+
+        </li>
+        <li data-filter="seller-list">
+            <span>SellerList</span>
+
+        </li>
+    </ul>
+</div>
+
+<div id="detail-revenue" class="table-container">
+    <div style="display: flex; justify-content: center; margin: 3%; margin-top: 0">
+        <table class="table table-bordered table-hover table-white" style="width: 90%;" id="example">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Game ID</th>
+                    <th>Date</th>
+                    <th>Seller Money</th>
+                    <th>Amount Received</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.totalRevenue)
+                {
+
+                    <tr>
+                        <td>@item.ID</td>
+                        <td>@item.GID</td>
+                        <td>@item.date</td>
+                        <td>@item.sellerMoney</td>
+                        <td>@item.plusMoney</td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="seller-list" class="table-container">
+    <div style="display: flex; justify-content: center; margin: 3%; margin-top: 0">
+        <table class="table table-bordered table-hover table-white" style="width: 90%;" id="example">
+            <thead>
+                <tr>
+                    <th>Seller Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Money</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.sellerList)
+                {
+                    if (item.Status == "Enable")
+                    {
+
+                        <tr>
+                            <td>@item.Username</td>
+                            <td>@item.Email</td>
+                            <td>@item.Gender</td>
+                            <td>@item.Money</td>
+                            <td>@item.Date</td>
+                            <td>
+                                <a class="btn btn-warning" asp-page="./Seller"
+                                   asp-route-id="@item.Username">Detail</a>
+                            </td>
+                        </tr>
+
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="color:red">@item.Username</td>
+                            <td style="color:red">@item.Email</td>
+                            <td style="color:red">@item.Gender</td>
+                            <td style="color:red">@item.Money</td>
+                            <td style="color:red">@item.Date</td>
+                            <td style="color:red">
+                                <a class="btn btn-warning" asp-page="./Seller"
+                                   asp-route-id="@item.Username">Detail</a>
+                            </td>
+                        </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // JavaScript điều khiển hiển thị bảng
+    document.querySelectorAll('.pagination li').forEach(item => {
+        item.addEventListener('click', () => {
+            // Kiểm tra nếu mục đã được chọn thì không làm gì cả
+            if (item.classList.contains('active')) {
+                return;
+            }
+
+            // Ẩn tất cả các bảng
+            document.querySelectorAll('.table-container').forEach(table => {
+                table.style.display = 'none';
+            });
+
+                    // Hiển thị bảng có id tương ứng với data-filter của mục được chọn
+                    const targetId = item.getAttribute('data-filter');
+                    document.getElementById(targetId).style.display = 'block';
+
+                    // Đánh dấu mục đã chọn
+                    document.querySelectorAll('.pagination li').forEach(li => {
+                        li.classList.remove('active'); // Xóa class active từ tất cả các mục
+                    });
+                    item.classList.add('active'); // Thêm class active cho mục hiện tại
+                });
+            });
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    // Tìm nút bằng ID
+                    var myButton = document.getElementById("myButton");
+
+                    // Kiểm tra xem nút có tồn tại không
+                    if (myButton) {
+                        // Sử dụng phương thức click() để bấm tự động nút
+                        myButton.click();
+                    }
+                });
+</script>

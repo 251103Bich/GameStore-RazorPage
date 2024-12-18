@@ -1,0 +1,61 @@
+﻿@page
+@model WebApp.Pages.Home.ResetPassModel
+@{
+}
+
+
+<div id="appvue">
+
+    <register-component></register-component>
+
+    <section class="youplay-banner banner-top youplay-banner-parallax full">
+        <div class="image" data-speed="0.4">
+            <img src="/upload/2/648bc7ed1119d.jpg" alt class="jarallax-img">
+        </div>
+        <div class="info">
+            <div class="container">
+                <div class="youplay-login">
+                    <div class="youplay-form text-center">
+                        <h1>Reset PassWord</h1>
+                        @if (Model.SuccessMessage != null)
+                        {
+                            <div class="alert" style="background-color: rgb(0, 255, 102)">
+                                <span class="closebtn" onclick="this.parentElement.style.display = 'none';">&times;</span>
+                                <strong>Lucky checked!</strong> @Model.SuccessMessage
+
+                            </div>
+                        }
+                        @if (Model.ErrorMessage != null)
+                        {
+                            <div class="alert" style="background-color: red">
+                                <span class="closebtn" onclick="this.parentElement.style.display = 'none';">&times;</span>
+                                <strong>Poor checked!</strong> @Model.ErrorMessage
+
+                            </div>
+                        }
+                        <br />
+                        <form method="POST">
+                            <div class="youplay-input">
+                                <input type="password" asp-for="newPass" placeholder="NewPass">
+                            </div>
+                            <span asp-validation-for="newPass" class="text-danger"></span>
+
+                            <div class="youplay-input">
+                                <input type="password" asp-for="confirmPass" placeholder="ConfirmPass">
+                            </div>
+                            <span asp-validation-for="confirmPass" class="text-danger"></span>
+
+                            <button class="btn btn-default db" name="btnLogin1">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

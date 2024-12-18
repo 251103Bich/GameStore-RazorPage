@@ -1,0 +1,37 @@
+﻿@page
+@model WebApp.Pages.Library.IndexModel
+@{
+}
+<form method="post" asp-page-handler="Post">
+	<div>
+		<p class="boxtitle">@Model.Profile.Username library</p>
+		<div>
+			@if (Model.Games.Count() == 0)
+			{
+				<h1>NO CONTENT</h1>
+			}
+			else
+			{
+				@foreach (var item in Model.Games)
+				{
+					<div class="divbox">
+						<div class="boximage-wrapper">
+							<img src="~/upload/img/@item.Picture" alt="Image">
+						</div>
+						<div class="boxcontent">
+							<div class="itemname">@item.GameName</div>
+							<div class="itemdetail">
+								@foreach (var item2 in item.Cids)
+								{
+									<span>@item2.Cid</span>
+								}
+							</div>
+							<div class="itemdetail">By @item.SellerName</div>
+						</div>
+					</div>
+				}
+			}
+		</div>
+	</div>
+</form>
+<link href="~/css/boxlist.css" rel="stylesheet" />

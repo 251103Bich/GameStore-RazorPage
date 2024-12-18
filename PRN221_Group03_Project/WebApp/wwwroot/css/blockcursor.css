@@ -1,0 +1,10 @@
+﻿.not_allow {
+    cursor: not-allowed;
+    opacity: 0.5;
+    color: #aaa;
+    width: 90vmin;
+}
+
+.not_allow-content {
+    pointer-events: none;
+}
