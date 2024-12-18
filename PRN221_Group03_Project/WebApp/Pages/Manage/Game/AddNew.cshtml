@@ -1,0 +1,75 @@
+﻿@page
+@model AddNewModel
+@{
+}
+<form method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+    <div class="form-group">
+        <div id="namebox">
+            <span>Please enter Game Name.</span>
+        </div>
+        <label asp-for="_Game.GameName"></label>
+        <input id="gameName" asp-for="_Game.GameName" />
+    </div>
+    <div>
+        <div class="form-group">
+            <div id="catebox">
+                <span>Please choose Category.</span>
+            </div>
+            <label>Category</label>
+            @* Cần đầy đủ thành phần bên dưới *@
+            <ul id="selectedOptionsUl" class="tags"></ul>
+        </div>
+        <input type="hidden" id="selectedCategories" asp-for="cidList" />
+        <div class="selectBox" onclick="toggleCheckboxes()">
+        <div id="selectText">Select options</div>
+            <div class="checkboxes" id="checkboxes">
+                @foreach (var item in Model.Categories)
+                {
+                    <label><input type="checkbox" value="@item.Cid" /> @item.CategoryName</label>
+                }
+            </div>
+        </div>
+        @*--------------------------------*@
+    </div>
+    <div class="form-group">
+        <div id="pricebox">
+            <span>Please enter Price.</span>
+        </div>
+        <label asp-for="_Game.Price"></label>
+        <input id="gamePrice" asp-for="_Game.Price" type="number" />
+    </div>
+    <div class="form-group">
+        <div id="desbox">
+            <span>Please enter Description.</span>
+        </div>
+        <label asp-for="_Game.Description"></label>
+        <input id="gameDescription" asp-for="_Game.Description" />
+    </div>
+    <div class="form-group">
+        <div id="picturebox">
+            <span>Please upload a Picture.</span>
+        </div>
+        <label asp-for="_Game.Picture"></label>
+        <input id="gamePicture" type="file" asp-for="Image" accept="image/*" />
+    </div>
+    <div class="form-group">
+        <div id="conbox">
+            <span>Please enter Configuration.</span>
+        </div>
+        <label asp-for="_Game.Configuration"></label>
+        <input id="gameConfiguration" asp-for="_Game.Configuration" />
+    </div>
+    <div class="form-group">
+        <div id="downbox">
+            <span>Please upload a File Download.</span>
+        </div>
+        <label asp-for="_Game.DownloadFile"></label>
+        <input id="gameDownloadFile" type="file" asp-for="FileDownload" />
+    </div>
+        <button type="submit" class="btn btn-primary" asp-page-handler="Create">Create</button>
+</form>
+
+<script src="~/js/gabi.js"></script>
+<link href="~/css/gabi.css" rel="stylesheet" />
+<script src="~/js/gamevalidation.js"></script>
+<link href="~/css/gamevalidation.css" rel="stylesheet" />

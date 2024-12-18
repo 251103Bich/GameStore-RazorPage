@@ -1,0 +1,115 @@
+﻿@page
+@model WebApp.Pages.Home.ConfirmCodeModel
+@{
+}
+
+<div id="appvue">
+    <register-component></register-component>
+
+    <section class="youplay-banner banner-top youplay-banner-parallax full">
+        <div class="image" data-speed="0.4">
+            <img src="/upload/2/648bc7ed1119d.jpg" alt class="jarallax-img">
+        </div>
+        <div class="info">
+            <div class="container">
+                <div class="youplay-login">
+                    <div class="youplay-form text-center">
+                        <h1>Confirm</h1>
+                        @if (@ViewBag.Success != null)
+                        {
+                            <div class="alert" style="background-color: rgb(0, 255, 102)">
+                                <span class="closebtn" onclick="this.parentElement.style.display = 'none';">&times;</span>
+                                <strong>Lucky checked!</strong> @ViewBag.Success
+                            </div>
+                        }
+                        <form id="confirmForm" method="POST">
+                            @Html.AntiForgeryToken() <!-- Thêm CSRF token ở đây -->
+                            <input type="text" class="form-control" asp-for="code" placeholder="Enter your code" style="margin-bottom: 10px; text-align: center" />
+                            <span asp-validation-for="code" class="text-danger"></span>
+
+                            <br />
+                            <div style="display:flex; justify-content:center; gap: 50px;">
+                                <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+                                <button type="button" class="btn btn-default" onclick="reSend()">Resend</button>
+                            </div>
+                            <div id="resultMessage" style="text-align: center; margin-top: 10px;"></div>
+                            <div id="timer" style="text-align: center; margin-top: 10px;">60s</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    let countdown; // Biến lưu ID của setInterval
+
+    function startTimer() {
+        
+        let timeLeft = 60; // Thời gian đếm ngược 60 giây
+        const timerElement = document.getElementById('timer');
+        clearInterval(countdown);
+        countdown = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                timerElement.textContent = "Thời gian đã hết!";
+            } else {
+                timerElement.textContent = timeLeft + "s";
+            }
+            timeLeft -= 1;
+        }, 1000);
+    }
+
+    function submitForm() {
+        const formData = {
+            code: $('input[name="code"]').val(),
+            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Page("/Home/ConfirmCode", "ConfirmCode")', // Đường dẫn đến phương thức
+            data: formData,
+            success: function (response) {
+                if (response.redirect) {
+                    window.location.href = response.redirect; // Thực hiện chuyển hướng
+                }
+                $('#resultMessage').text(response.message);
+            },
+            error: function (xhr, status, error) {
+                $('#resultMessage').text('Error: ' + error);
+            }
+        });
+    }
+
+    function reSend() {
+        // Tạo đối tượng formData chỉ với CSRF token, không cần mã xác nhận
+        const formData = {
+            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() // Lấy CSRF token
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Page("/Home/ConfirmCode", "Resend")', // Đường dẫn đến phương thức
+            data: formData, // Chỉ gửi CSRF token
+            success: function (response) {
+                $('#resultMessage').text(response.message); // Hiển thị thông báo từ server
+                startTimer();
+            },
+            error: function (xhr, status, error) {
+                $('#resultMessage').text('Error: ' + error); // Hiển thị lỗi nếu có
+            }
+        });
+    }
+    $(document).ready(function () {
+        startTimer(); // Bắt đầu timer khi trang được tải
+    });
+</script>
+
+@section Scripts {
+    @{
+            <partial name="_ValidationScriptsPartial" />
+    }
+}

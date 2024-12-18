@@ -1,0 +1,126 @@
+﻿@page
+@model WebApp.Pages.Game.IndexModel
+@{
+}
+
+<section class="youplay-banner banner-top youplay-banner-parallax small">
+    <div class="image" data-speed="0.4">
+        <img src="/upload/img/@Model.viewedGame.Picture" alt class="jarallax-img">
+    </div>
+    <div class="info">
+        <div>
+            <div class="container">
+                <h1 class="h1 stroke-text">@Model.viewedGame.GameName</h1>
+
+                <br>
+                <form class="form-buynow" method="post">
+                    <div class="dib va-m mb-0">
+
+                        <a class="price price-custom" class="btn btn-lg price"
+                           title="Add to Cart">@Model.viewedGame.Price VNĐ</a>
+
+
+
+                    </div>
+                    <input type="hidden" name="GID" id="GID" value="@Model.viewedGame.Gid">
+                    <!--buy button-->
+                    @if(!Model.checkCart)
+                    {
+                        <button id="buy_now" class="btn price" type="submit" name="btnBuy" title="Add to Cart"
+                            asp-action="addCart" asp-controller="Profile" asp-route-id="@Model.viewedGame.Gid">
+                        Add To Cart
+                        </button>
+                    }
+                    @if (Model.checkWishList)
+                    {
+                        <a onclick="location.href='/Customer/Wishlist/Index'"
+                           class="btn price" name="btnWishList" title="Go to Wish list">
+                            To Wish list
+                        </a>
+                    }
+                    else if (!Model.checkWishList && !Model.checkCart)
+                    {
+                        <button type="submit" asp-page-handler="AddWishlist" asp-route-gid="@Model.viewedGame.Gid"
+                                class="btn price" name="btnWishList" title="Add to Wish list">
+                            Add Wish list
+                        </button>
+                    }
+                    
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+
+</section>
+<div class="content-wrap" style="width: 100%;">
+
+    <div class="youplay-carousel gallery-popup" data-arrows="'<b>prev</b>', '<em>next</em>'" style="width: 100%;">
+    </div>
+
+    <div class="container youplay-store " style="width: 95%;margin-top: 3%;" style="width: 100%;">
+        <div class="isotope" style="width: 100%;">
+
+            <a class="h2" asp-page="/Game/SellerGames" asp-route-seller="@Model.viewedGame.SellerName">
+                By:
+                @Model.viewedGame.SellerName
+            </a>
+
+            <p><br></p>
+            <div class="isotope-list row vertical-gutter" style="width: 100%;">
+                <div class="item" data-filters="info" style="width: 100%;">
+                    <article>
+                        <div class="description">
+                            <ul class="pagination isotope-options">
+                                <li data-filter="info" class="active"><span>Description</span></li>
+
+                            </ul>
+                            <div class="description" style="width: 100%;">
+                                <pre style="color: white; background-color: black; border: none; font-family: Arial, sans-serif; white-space: pre-line; width: 100%; margin: 0;">
+                                    @Model.viewedGame.Description
+                                </pre>
+
+                            </div>
+                            <p><br></p>
+                            <ul class="pagination isotope-options">
+                                <li data-filter="info" class="active"><span>Category</span></li>
+
+                            </ul>
+
+                            <div>
+                                @foreach (var item in Model.categories)
+                                {
+                                    <a asp-page="/Game/SearchCategory" asp-route-id="@item.Cid" >@item.CategoryName</a>
+                                <br>
+                                }
+                            </div>
+                            <p><br></p>
+
+                            <ul class="pagination isotope-options">
+                                <li data-filter="info" class="active"><span>Configuration</span></li>
+
+                            </ul>
+
+                            <div class="description" style="width: 100%;">
+                                <pre style="color: white; background-color: black; border: none; font-family: Arial, sans-serif; white-space: pre-line; width: 100%; margin: 0;">
+                                    @Model.viewedGame.Configuration
+                                </pre>
+
+                            </div>
+                        </div>
+                        @if (Model.checkLibrary && Model.checkFeedback || !Model.checkLibrary)
+                        {
+                            <div class="not_allow">
+                                <div class="not_allow-content">
+                                    <partial name="_ReviewPartial" model="Model.NewFeedback" />
+                                </div>
+                            </div>
+                        }
+                        else if (Model.checkLibrary && !Model.checkFeedback)
+                        {
+                            <partial name="_ReviewPartial" model="Model.NewFeedback" />
+                        }
+                        <partial name="_ListReviewPartial" model="Model.Feedbacks"/>
+                        @section Scripts {
+                            <partial name="_ValidationScriptsPartial" />
+                        }

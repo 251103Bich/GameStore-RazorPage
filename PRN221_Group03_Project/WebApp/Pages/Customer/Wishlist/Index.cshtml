@@ -1,0 +1,41 @@
+﻿@page
+@model WebApp.Pages.Wishlist.IndexModel
+@{
+}
+<form id="gabi_list" method="post" asp-page-handler="Post">
+	<div>
+		<p class="boxtitle">@Model._Profile.Username wishlist</p>
+		<div>
+			@if (Model._Profile.GidsNavigation.Count() == 0)
+			{
+				<h1>NO CONTENT</h1>
+			}else{
+				@foreach (var item in Model._Profile.GidsNavigation)
+				{
+					<div class="divbox">
+						<div class="boximage-wrapper">
+							<img src="~/upload/img/@item.Picture" alt="Image">
+						</div>
+						<div class="boxcontent">
+							<div class="itemname">@item.GameName</div>
+							<div class="itemdetail">
+								@foreach (var item2 in item.Cids)
+								{
+									<span>@item2.Cid</span>
+								}
+							</div>
+							<div class="itemdetail">By @item.SellerName</div>
+							<div class="boxbuttons">
+								<div>@item.Price VND</div>
+								<button type="submit" asp-page-handler="AddCart" asp-route-gid="@item.Gid">Add to cart</button>
+								<button type="submit" asp-route-gid="@item.Gid">Remove</button>
+							</div>
+						</div>
+					</div>
+				}
+			}
+		</div>
+	</div>
+</form>
+
+<link href="~/css/boxlist.css" rel="stylesheet" />

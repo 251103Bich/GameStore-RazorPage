@@ -1,0 +1,13 @@
+﻿#namebox, #catebox, #pricebox, #desbox, #picturebox, #conbox, #downbox {
+    position: absolute;
+    border: 1px solid grey;
+    color: white;
+    background-color: #c96363;
+    visibility: hidden;
+    border-radius: 5px;
+    padding: 3px 10px;
+    width: fit-content;
+    opacity: 0.9;
+    right: 190vmin;
+    margin: 105px 0;
+}

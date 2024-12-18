@@ -1,0 +1,57 @@
+﻿@page
+@model WebApp.Pages.Game.CategoryListModel
+
+@{
+    ViewData["Title"] = "CategoryList";
+    
+
+}
+<div style="margin; 40px 0px 20px 80px">
+    </br>
+    </br>
+    <div class="container mt-5">
+        <h1 class="">List of Categories</h1>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="list-group">
+                    @foreach (var item in Model.CategoryList)
+                    {
+                        <a asp-page="/Game/SearchCategory" asp-route-id="@item.Cid"
+                           class="list-group-item list-group-item-action btn btn-warning" style="color: white;">
+                            @item.CategoryName
+                        </a>
+                    }
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="row">
+                    @foreach (var item in Model.GamesList)
+                    {
+                        <div class="col-md-6 mb-4">
+                            <a asp-page="/Game/Index" asp-route-id="@item.Gid" class="angled-img">
+                                <div style="height: 100%; width: 100%;" class="img img-hcustom">
+                                    <img class="gameimg" height="120px" width="100%" src="/upload/img/@item.Picture"
+                                         alt="Steam code wallet ~119k VNĐ (~5$)">
+                                </div>
+                                <div class="bottom-info">
+                                    <h4>@item.GameName</h4>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <div class="rating">
+                                                <div class="rating-back">
+                                                    <i class="platform-steam fa-win"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="price">@item.Price VNĐ</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>

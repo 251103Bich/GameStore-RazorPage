@@ -1,0 +1,41 @@
+﻿@page
+@model WebApp.Pages.Home.DisableModel
+@{
+}
+
+<div id="appvue">
+
+    <register-component></register-component>
+
+    <section class="youplay-banner banner-top youplay-banner-parallax full">
+        <div class="image" data-speed="0.4">
+            <img src="/upload/2/648bc7ed1119d.jpg" alt class="jarallax-img">
+        </div>
+        <div class="info">
+            <div class="container">
+                <div class="youplay-login">
+                    <div class="youplay-form text-center">
+                        <h1>Confirm</h1>
+                       
+                            <div class="alert" style="background-color: red">
+                                <span class="closebtn" onclick="this.parentElement.style.display = 'none';">&times;</span>
+                                <strong>Poor checked!</strong> Your Account is Disable;
+
+                            </div>
+                        
+                        <br />
+
+                        <a class="btn btn-default db" asp-page="/Home/Logout">Logout</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

@@ -1,0 +1,179 @@
+﻿@page
+@model WebApp.Pages.Administrator.Revenue.SellerModel
+@{
+}
+
+@{
+    ViewData["Title"] = "revenue";
+
+    var dateNames = (List<DateOnly>)ViewData["DateNames"];
+    var dailyRevenue = (List<long>)ViewData["DateRevenue"];
+
+
+
+
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <canvas id="myChart"></canvas>
+    <br>
+    <h4 style="color: red;" id="dateErrorMess"></h4>
+    <div class="row">
+        <div class="col-md-3">
+            <input type="date" id="startDate" class="form-control" placeholder="Start Date">
+        </div>
+        <div class="col-md-3">
+            <input type="date" id="endDate" class="form-control" placeholder="End Date">
+        </div>
+        <div class="col-md-2">
+            <button id="updateChart" class="btn btn-primary" onclick="updateChart()">Update Chart</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Chuyển đổi dữ liệu từ Razor sang JavaScript
+    var dateNames = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(dateNames));
+    var dailyRevenue = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(dailyRevenue));
+
+    // Thiết lập dữ liệu cho biểu đồ
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar', // Mặc định là biểu đồ cột
+        data: {
+            labels: dateNames.map(date => date.toString()), // Chuyển đổi DateOnly thành chuỗi
+            datasets: [{
+                type: 'line', // Biểu đồ đường
+                label: 'Doanh thu hàng ngày (Đường)',
+                data: dailyRevenue,
+                backgroundColor: 'rgba(155,197,215,0.5)',
+                borderColor: 'rgba(155,197,215,1)',
+                borderWidth: 2,
+                fill: false // Không làm đầy cho biểu đồ đường
+            }, {
+                type: 'bar', // Biểu đồ cột
+                label: 'Doanh thu hàng ngày (Cột)',
+                data: dailyRevenue,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    function updateChart() {
+        var startDate = new Date(document.getElementById("startDate").value);
+        var endDate = new Date(document.getElementById("endDate").value);
+
+        // Kiểm tra xem ngày bắt đầu và ngày kết thúc có hợp lệ không
+        if (isNaN(startDate) || isNaN(endDate) || startDate > endDate) {
+            document.getElementById("dateErrorMess").innerText = "Vui lòng chọn ngày hợp lệ!";
+            return;
+        }
+
+        // Lọc dữ liệu theo khoảng thời gian đã chọn
+        var filteredDates = [];
+        var filteredRevenues = [];
+
+        for (var i = 0; i < dateNames.length; i++) {
+            var currentDate = new Date(dateNames[i]);
+
+            if (currentDate >= startDate && currentDate <= endDate) {
+                filteredDates.push(dateNames[i].toString());
+                filteredRevenues.push(dailyRevenue[i]);
+            }
+        }
+
+        // Cập nhật dữ liệu biểu đồ
+        myChart.data.labels = filteredDates;
+        myChart.data.datasets[0].data = filteredRevenues; // Dữ liệu cho biểu đồ đường
+        myChart.data.datasets[1].data = filteredRevenues; // Dữ liệu cho biểu đồ cột
+
+        // Cập nhật lại biểu đồ
+        myChart.update();
+
+        // Nếu không có dữ liệu nào, hiển thị thông báo
+        if (filteredDates.length === 0) {
+            document.getElementById("dateErrorMess").innerText = "Không có dữ liệu cho khoảng thời gian này!";
+        } else {
+            document.getElementById("dateErrorMess").innerText = "";
+        }
+    }
+</script>
+
+<div class="info" style="margin:2% 0 3% 5%">
+    <div>
+        <div class="container">
+
+
+            <a class="btn" asp-page="/Administrator/Revenue/Index">Return</a>
+            <br>
+        </div>
+    </div>
+</div>
+
+<div style="display: flex; justify-content: center; margin: 3%;">
+    <table style="width: 90%;" id="example">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th style="padding-left:2%;">Picture</th>
+                <th style="width: 50px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.sellerGames)
+            {
+                @if (item.Status == "Enable")
+                {
+                    <tr>
+                        <td>@item.Gid</td>
+                        <td>@item.GameName</td>
+                        <td style="width: 30%;">
+                            <img style="padding:5%; height: 150px; width: 100%;"
+                                 src="/upload/img/@item.Picture">
+                        </td>
+                        <td>
+                            <a class="btn btn-warning" asp-page="./Detail"
+                               asp-route-seller="@item.SellerName"
+                               asp-route-id="@item.Gid">Detail</a>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr style="color: red;">
+                        <td>@item.Gid</td>
+                        <td>@item.GameName</td>
+                        <td style="width: 30%;">
+                            <img style="padding:5%; height: 150px; width: 100%;"
+                                 src="/upload/img/@item.Picture">
+                        </td>
+                        <td>
+                            <a class="btn btn-warning" asp-page="./Detail"
+                               asp-route-seller="@item.SellerName"
+                               asp-route-id="@item.Gid">Detail</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
